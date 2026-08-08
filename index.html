@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kryszx Tecnologia</title>
+
+<style>
+*{
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body{
+    margin: 0;
+    padding: 16px;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+#loginModal{
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, #1f2937 0%, #0f172a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 16px;
+}
+
+.login-card{
+    background: #ffffff;
+    padding: 32px 24px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.login-header{ margin-bottom: 24px; }
+
+.login-icon-badge{
+    width: 60px; height: 60px;
+    background: #ecfdf5; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 12px auto;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+}
+
+.login-card h2{ margin: 0 0 6px 0; color: #111827; font-size: 22px; font-weight: 800; }
+.login-card p{ color: #6b7280; font-size: 13.5px; margin: 0; }
+
+.input-with-icon{ position: relative; margin-bottom: 16px; }
+.input-icon{
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%); font-size: 16px; color: #9ca3af; pointer-events: none;
+}
+
+.input-styled{
+    width: 100%; padding: 14px 14px 14px 44px !important;
+    border: 1.5px solid #e5e7eb; background: #f9fafb;
+    border-radius: 12px; font-size: 15px; color: #111827;
+    outline: none; transition: all 0.2s ease;
+}
+
+.input-styled:focus{
+    border-color: #10b981; background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+}
+
+.pin-style{ letter-spacing: 4px; font-weight: 700; }
+
+.btn-login-submit{
+    width: 100%; padding: 15px; background: #10b981;
+    color: white; border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    margin-top: 8px; transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.btn-login-submit:hover{ background: #059669; transform: translateY(-1px); }
+
+.container{
+    width: 100%; max-width: 950px; background: #ffffff;
+    padding: 24px; border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: none;
+}
+
+.main-tabs{
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; background: #f3f4f6; padding: 6px;
+    border-radius: 12px; margin-bottom: 24px;
+}
+
+.tab-btn{
+    padding: 12px; border: none; background: transparent;
+    border-radius: 8px; font-size: 15px; font-weight: 500;
+    color: #6b7280; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; gap: 8px;
+}
+
+.tab-btn.active{
+    background: #ffffff; color: #10b981;
+    font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.section-label{ font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; display: block; }
+
+.type-selector{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+
+.type-btn{
+    padding: 14px; border: 1.5px solid #e5e7eb;
+    background: #ffffff; border-radius: 10px; font-size: 15px;
+    font-weight: 600; color: #4b5563; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+
+.type-btn.active-ganancia{ border-color: #10b981; background: #ecfdf5; color: #059669; }
+.type-btn.active-gasto{ border-color: #ef4444; background: #fef2f2; color: #dc2626; }
+
+.form-group{ margin-bottom: 18px; }
+label{ display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+
+input, select{
+    width: 100%; padding: 14px 16px; border: 1px solid #e5e7eb;
+    background: #f9fafb; border-radius: 10px; font-size: 15px;
+    color: #1f2937; outline: none;
+}
+
+input:focus, select:focus{ border-color: #10b981; background: #ffffff; }
+
+.summary-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+
+.summary-card{
+    background: #f9fafb; border: 1px solid #e5e7eb;
+    border-radius: 12px; padding: 16px; text-align: center;
+}
+
+.summary-card.full-width{ grid-column: span 2; background: #eff6ff; border-color: #bfdbfe; }
+.summary-title{ font-size: 11px; font-weight: 700; color: #6b7280; letter-spacing: 0.5px; text-transform: uppercase; }
+.summary-value{ font-size: 20px; font-weight: 800; margin-top: 4px; }
+
+.val-ganancia { color: #059669; }
+.val-gasto { color: #dc2626; }
+.val-utilidad { color: #2563eb; }
+
+.search-box{ position: relative; margin-top: 15px; margin-bottom: 15px; }
+.search-input{ padding-left: 40px; background: #f9fafb; }
+.search-icon{ position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; }
+
+.table-container{ overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table{ width: 100%; border-collapse: collapse; min-width: 500px; }
+th{ font-size: 13px; color: #6b7280; font-weight: 600; text-align: left; padding: 12px 8px; border-bottom: 1px solid #e5e7eb; }
+td{ padding: 16px 8px; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
+
+.concepto-title{ font-weight: 700; color: #111827; font-size: 14px; }
+.concepto-sub{ font-size: 12px; color: #6b7280; margin-top: 2px; }
+
+.monto-pos{ color: #059669; font-weight: 700; }
+.monto-neg{ color: #dc2626; font-weight: 700; }
+
+.actions-cell{ display: flex; gap: 8px; justify-content: flex-end; }
+.action-btn{ background: transparent; border: none; cursor: pointer; font-size: 16px; opacity: 0.7; }
+.action-btn:hover{ opacity: 1; }
+
+.btn-submit{
+    width: 100%; padding: 16px; background: #10b981;
+    color: white; border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 20px;
+}
+
+.btn-export{
+    width: 100%; padding: 14px; background: #2563eb;
+    color: white; border: none; border-radius: 12px;
+    font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 20px;
+}
+
+.btn-logout{
+    width: 100%; padding: 14px; background: #ffffff;
+    color: #ef4444; border: 1px solid #fee2e2; border-radius: 12px;
+    font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 12px;
+}
+
+/* MODAL DE FACTURA CORREGIDO */
+#receiptModal{
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.75); display: none;
+    justify-content: center; align-items: center; z-index: 1000; padding: 16px;
+    backdrop-filter: blur(4px);
+}
+
+.receipt-card{
+    background: #ffffff; padding: 24px; border-radius: 16px;
+    width: 100%; max-width: 480px; text-align: left;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25); border: 1px solid #e5e7eb;
+}
+
+.receipt-header {
+    text-align: center;
+    border-bottom: 2px dashed #e5e7eb;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+}
+
+.receipt-header h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.receipt-header p {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.receipt-subtext {
+    font-size: 11px !important;
+    color: #9ca3af !important;
+    margin-top: 2px !important;
+}
+
+.receipt-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #374151;
+    margin-bottom: 16px;
+    background: #f8fafc;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+.badge-pagado {
+    background: #ecfdf5;
+    color: #059669;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11px;
+    border: 1px solid #a7f3d0;
+}
+
+/* CORRECCIÓN ANCHO DE TABLA Y ALINEACIÓN DE MONTO */
+.receipt-table-wrapper {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+    margin-bottom: 16px;
+}
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.receipt-table th {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 10px 8px;
+    text-transform: uppercase;
+}
+
+.receipt-table td {
+    padding: 12px 8px;
+    font-size: 13px;
+    border-bottom: 1px solid #f1f5f9;
+    word-wrap: break-word;
+}
+
+.receipt-total-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ecfdf5;
+    border: 1.5px solid #a7f3d0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #065f46;
+    margin-bottom: 16px;
+}
+
+.receipt-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #64748b;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 12px;
+}
+
+@media print {
+    body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    body * {
+        visibility: hidden;
+    }
+
+    #receiptModal, #receiptModal * {
+        visibility: visible;
+    }
+
+    #receiptModal {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        background: transparent !important;
+        display: block !important;
+        padding: 0 !important;
+    }
+
+    .receipt-card {
+        box-shadow: none !important;
+        border: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 20px !important;
+        border-radius: 0 !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}
+
+@media (max-width: 600px) {
+    body { padding: 10px; }
+    .container { padding: 16px; border-radius: 12px; }
+    .login-card { padding: 24px 18px; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .summary-card.full-width { grid-column: span 1; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- PANTALLA DE LOGIN -->
+<div id="loginModal">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-icon-badge">
+            <img src="" alt="Logo" width="100"></div>
+            <h2>Panel Profecional Kryszx Tecnologia</h2>
+            <p>Ingresa tus credenciales para acceder</p>
+        </div>
+        
+        <div class="input-with-icon">
+            <span class="input-icon">👤</span>
+            <input type="text" id="userInput" class="input-styled" placeholder="Usuario">
+        </div>
+
+        <div class="input-with-icon">
+            <span class="input-icon">🔑</span>
+            <input type="password" id="pinInput" class="input-styled pin-style" placeholder="Contraseña">
+        </div>
+
+        <button class="btn-login-submit" id="btnLogin" onclick="validarLogin()">Ingresar al Sistema</button>
+    </div>
+</div>
+
+<!-- PANEL PRINCIPAL -->
+<div class="container" id="mainContainer">
+
+    <div class="main-tabs">
+        <button class="tab-btn active" id="btn-tab-reg" onclick="cambiarTab('registrar')">➕ Registrar</button>
+        <button class="tab-btn" id="btn-tab-his" onclick="cambiarTab('historial')">📊 Historial</button>
+    </div>
+
+    <!-- PESTAÑA REGISTRAR -->
+    <div id="sec-registrar">
+        <span class="section-label">Tipo De Operación</span>
+        <div class="type-selector">
+            <button type="button" class="type-btn active-ganancia" id="btn-ganancia" onclick="seleccionarTipo('Ganancia')">📈 Ganancia</button>
+            <button type="button" class="type-btn" id="btn-gasto" onclick="seleccionarTipo('Gasto')">📉 Gasto</button>
+        </div>
+
+        <form id="formOperacion" onsubmit="guardarRegistro(event)">
+            <div class="form-group">
+                <label>Fecha De Orden</label>
+                <input type="date" id="fecha" required>
+            </div>
+            <div class="form-group">
+                <label>Detalle del servicio</label>
+                <input type="text" id="concepto" placeholder="Escriba aqui que servicio realizo" required>
+            </div>
+            <div class="form-group">
+                <label>Numero - WhatsApp</label>
+                <input type="text" id="whatsapp" placeholder="Escriba aqui su numero">
+            </div>
+            <div class="form-group">
+                <label>Categoría</label>
+                <select id="categoria">
+                    <option value="Servicios">Servicio</option>
+                    <option value="Ventas">Venta</option>
+                    <option value="Mantenimiento">Mantenimiento</option>
+                    <option value="Otros">Otra categoría (Otros)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Método de Pago</label>
+                <select id="metodo">
+                    <option value="Efectivo">💵 Efectivo</option>
+                    <option value="Nequi/Daviplata">📱 Nequi / Daviplata</option>
+                    <option value="Transferencia">🏦 Transferencia bancaria</option>
+                </select>
+            </div>
+            <div
+            class="form-group"><label for="monto">Monto (COP)</label><input type="number" step="1" id="monto" placeholder="Ej. 120 (para $120.000)" required>
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnGuardar">💾 Guardar Registro</button>
+            <button type="button" class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+        </form>
+    </div>
+
+    <!-- PESTAÑA HISTORIAL -->
+    <div id="sec-historial" style="display:none;">
+        
+        <label>Filtrar por Mes:</label>
+        <select id="filtroMes" onchange="filtrarYMostrar()" style="margin-bottom: 20px;">
+            <option value="TODOS">Mostrar Todos los Meses</option>
+        </select>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-title">GANANCIAS</div>
+                <div class="summary-value val-ganancia" id="sumGanancias">$0</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-title">GASTOS</div>
+                <div class="summary-value val-gasto" id="sumGastos">$0</div>
+            </div>
+            <div class="summary-card full-width">
+                <div class="summary-title">UTILIDAD NETA DEL MES</div>
+                <div class="summary-value val-utilidad" id="sumUtilidad">$0</div>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="buscar" class="search-input" placeholder="Buscar por detalle o categoría..." onkeyup="filtrarYMostrar()">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Detalle</th>
+                        <th style="text-align:right;">Monto (COP)</th>
+                        <th style="text-align:right;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaHistorial">
+                </tbody>
+            </table>
+        </div>
+
+        <button class="btn-export" onclick="exportarCSV()">📥 Exportar Reporte (CSV/Excel)</button>
+        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+
+</div>
+
+<!-- MODAL PARA RECIBO/FACTURA CORREGIDO -->
+<div id="receiptModal">
+    <div class="receipt-card" id="receiptPrintArea">
+        <div class="receipt-header">
+            <h2>Kryszx Tecnologia</h2>
+            <p>Servicios Tecnológicos & Mantenimiento</p>
+            <p class="receipt-subtext">Pradera, Valle del Cauca</p>
+        </div>
+
+        <div class="receipt-meta">
+            <div>
+                <strong>N° Factura:</strong> <span id="recNumFactura">001</span><br>
+                <strong>Fecha:</strong> <span id="recFecha"></span>
+            </div>
+            <div>
+                <span class="badge-pagado">COMPROBANTE DE PAGO</span>
+            </div>
+        </div>
+
+        <div class="receipt-table-wrapper">
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th style="width: 45%; text-align: left;">DESCRIPCIÓN</th>
+                        <th style="width: 25%; text-align: center;">MÉTODO DE PAGO</th>
+                        <th style="width: 30%; text-align: right;">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: left;">
+                            <strong id="recConcepto" style="color: #0f172a;"></strong><br>
+                            <small id="recCategoria" style="color: #64748b; font-size: 11px;"></small>
+                        </td>
+                        <td id="recMetodo" style="color: #334155; text-align: center;"></td>
+                        <td style="text-align: right; font-weight: 700; color: #0f172a;" id="recMontoTabla"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="receipt-total-box">
+            <span style="font-weight: 700;">TOTAL PROCESADO:</span>
+            <strong id="recMonto" style="font-size: 18px;"></strong>
+        </div>
+
+        <div class="receipt-footer" style="text-align: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #e0e0e0;">
+  
+  <p style="margin: 0 0 6px 0; font-weight: 700; font-size: 13px; color: #0f172a;">
+    ✨ ¡Muchas gracias por confiar en nosotros!
+  </p>
+  
+  <p style="margin: 0 0 10px 0; font-size: 11px; color: #64748b; line-height: 1.4;">
+    Tu tranquilidad es nuestra prioridad. Esperamos que disfrutes de un excelente servicio.
+  </p>
+  
+  <div style="display: inline-block; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 4px 12px; font-size: 11px; color: #334155;">
+    📲 <strong>¿Dudas o consultas?</strong> WhatsApp: +57 324 845 4484
+  </div>
+
+</div>
+
+        <div class="no-print" style="margin-top: 20px;">
+            <button class="btn-submit" onclick="window.print()" style="margin-top:0;">🖨️ Imprimir / Guardar PDF</button>
+            <button class="btn-logout" onclick="cerrarModalRecibo()" style="margin-top: 8px;">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbwS_rJnTETQUBbXjvMQcMlXHz6B-W9YLK5LuyU2Q9fseNhxIsY8jc4gtU_0SnJjS667xg/exec";
+
+let todosLosDatos = [];
+let tipoSeleccionado = "Ganancia";
+
+document.getElementById('fecha').valueAsDate = new Date();
+
+if(sessionStorage.getItem("logged") === "true"){
+    document.getElementById("loginModal").style.display = "none";
+    document.getElementById("mainContainer").style.display = "block";
+}
+
+function validarLogin(){
+    const usuario = document.getElementById("userInput").value.trim();
+    const pin = document.getElementById("pinInput").value.trim();
+    const btn = document.getElementById("btnLogin");
+    
+    if(!usuario || !pin) return alert("Por favor ingresa usuario y PIN");
+
+    btn.disabled = true;
+    btn.innerText = "Verificando...";
+
+    fetch(`${API_URL}?action=login&usuario=${encodeURIComponent(usuario)}&pin=${encodeURIComponent(pin)}`)
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            sessionStorage.setItem("logged", "true");
+            sessionStorage.setItem("usuario", data.usuario);
+            document.getElementById("loginModal").style.display = "none";
+            document.getElementById("mainContainer").style.display = "block";
+        } else {
+            alert("❌ " + (data.message || "Usuario o PIN incorrectos"));
+            btn.disabled = false;
+            btn.innerText = "Ingresar al Sistema";
+        }
+    })
+    .catch(err => {
+        alert("Error de conexión al verificar credenciales.");
+        btn.disabled = false;
+        btn.innerText = "Ingresar al Sistema";
+    });
+}
+
+function cerrarSesion(){
+    sessionStorage.removeItem("logged");
+    sessionStorage.removeItem("usuario");
+    location.reload();
+}
+
+function seleccionarTipo(tipo){
+    tipoSeleccionado = tipo;
+    document.getElementById("btn-ganancia").className = tipo === 'Ganancia' ? "type-btn active-ganancia" : "type-btn";
+    document.getElementById("btn-gasto").className = tipo === 'Gasto' ? "type-btn active-gasto" : "type-btn";
+}
+
+function cambiarTab(tab){
+    document.getElementById("sec-registrar").style.display = tab === 'registrar' ? "block" : "none";
+    document.getElementById("sec-historial").style.display = tab === 'historial' ? "block" : "none";
+    document.getElementById("btn-tab-reg").className = tab === 'registrar' ? "tab-btn active" : "tab-btn";
+    document.getElementById("btn-tab-his").className = tab === 'historial' ? "tab-btn active" : "tab-btn";
+    
+    if(tab === 'historial') cargarHistorial();
+}
+
+function guardarRegistro(e){
+    e.preventDefault();
+    const btn = document.getElementById("btnGuardar");
+    btn.disabled = true;
+    btn.innerText = "Guardando...";
+
+    const data = new URLSearchParams();
+    data.append("tipo", tipoSeleccionado);
+    data.append("fecha", document.getElementById("fecha").value);
+    data.append("concepto", document.getElementById("concepto").value.trim());
+    data.append("whatsapp", document.getElementById("whatsapp").value.trim());
+    data.append("categoria", document.getElementById("categoria").value);
+    data.append("metodo", document.getElementById("metodo").value);
+    data.append("monto", document.getElementById("monto").value);
+
+    fetch(API_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: data
+    })
+    .then(() => {
+        alert("¡Registro guardado exitosamente!");
+        document.getElementById("concepto").value = "";
+        document.getElementById("whatsapp").value = "";
+        document.getElementById("monto").value = "";
+        btn.disabled = false;
+        btn.innerText = "💾 Guardar Registro";
+    })
+    .catch(err => {
+        alert("Error al guardar");
+        btn.disabled = false;
+        btn.innerText = "💾 Guardar Registro";
+    });
+}
+
+function cargarHistorial(){
+    document.getElementById("tablaHistorial").innerHTML = `<tr><td colspan="4" style="text-align:center;">Cargando datos...</td></tr>`;
+    
+    fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
+        todosLosDatos = data;
+        poblarOpcionesMeses(); // <-- Genera los meses en el <select>
+        filtrarYMostrar();
+    })
+    .catch(err => {
+        document.getElementById("tablaHistorial").innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">Error al cargar datos</td></tr>`;
+    });
+}
+
+// NUEVA FUNCIÓN PARA POBLAR AUTOMÁTICAMENTE EL SELECTOR DE MESES
+function poblarOpcionesMeses(){
+    const selectMes = document.getElementById("filtroMes");
+    const valorPrevio = selectMes.value;
+    
+    // Extraer combinaciones únicas de Año-Mes (YYYY-MM)
+    const mesesSet = new Set();
+    todosLosDatos.forEach(item => {
+        if(item.fecha){
+            const f = String(item.fecha).split('T')[0];
+            if(f.length >= 7){
+                mesesSet.add(f.substring(0, 7));
+            }
+        }
+    });
+
+    // Ordenar de más reciente a más antiguo
+    const mesesOrdenados = Array.from(mesesSet).sort().reverse();
+
+    let htmlOptions = `<option value="TODOS">Mostrar Todos los Meses</option>`;
+    
+    const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    mesesOrdenados.forEach(mesClave => {
+        const [anio, mesNum] = mesClave.split('-');
+        const nombreMes = nombresMeses[parseInt(mesNum, 10) - 1];
+        htmlOptions += `<option value="${mesClave}">${nombreMes} ${anio}</option>`;
+    });
+
+    selectMes.innerHTML = htmlOptions;
+    
+    // Mantener la selección actual si todavía existe
+    if(Array.from(selectMes.options).some(opt => opt.value === valorPrevio)){
+        selectMes.value = valorPrevio;
+    }
+}
+
+function filtrarYMostrar(){
+    const mes = document.getElementById("filtroMes").value;
+    const texto = document.getElementById("buscar").value.toLowerCase();
+
+    let filtrados = todosLosDatos.filter(item => {
+        let fLimpia = String(item.fecha || '');
+        let coincideMes = mes === "TODOS" || fLimpia.startsWith(mes);
+        let coincideTexto = String(item.concepto || '').toLowerCase().includes(texto) ||
+                            String(item.categoria || '').toLowerCase().includes(texto);
+        return coincideMes && coincideTexto;
+    });
+
+    let totalGanancias = 0;
+    let totalGastos = 0;
+
+    filtrados.forEach(i => {
+        let m = parseFloat(i.monto) || 0;
+        if(i.tipo === 'Gasto') totalGastos += m;
+        else totalGanancias += m;
+    });
+
+    let utilidad = totalGanancias - totalGastos;
+
+    document.getElementById("sumGanancias").innerText = formatoMoneda(totalGanancias);
+    document.getElementById("sumGastos").innerText = formatoMoneda(totalGastos);
+    document.getElementById("sumUtilidad").innerText = formatoMoneda(utilidad);
+
+    let html = "";
+    if(filtrados.length === 0){
+        document.getElementById("tablaHistorial").innerHTML = `<tr><td colspan="4" style="text-align:center; color:#9ca3af;">No hay registros para mostrar.</td></tr>`;
+        return;
+    }
+
+    filtrados.forEach((row, index) => {
+        const esGasto = row.tipo === 'Gasto';
+        const signo = esGasto ? '-' : '+';
+        const claseMonto = esGasto ? 'monto-neg' : 'monto-pos';
+        const fMostrada = String(row.fecha || '').split('T')[0];
+        
+        const conceptoEscapado = String(row.concepto || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+        html += `
+        <tr>
+            <td style="color:#6b7280; font-size:13px; white-space:nowrap;">${fMostrada}</td>
+            <td>
+                <div class="concepto-title">${row.concepto || ''}</div>
+                <div class="concepto-sub">${row.categoria || 'Servicios'} • ${row.metodo || 'Efectivo'}</div>
+            </td>
+            <td style="text-align:right;" class="${claseMonto}">${signo}${formatoMoneda(row.monto)}</td>
+            <td class="actions-cell">
+                <button class="action-btn" title="Ver Recibo" onclick="verRecibo(${index})">📜</button>
+                <button class="action-btn" title="Enviar por WhatsApp" onclick="abrirWA('${row.whatsapp}', '${conceptoEscapado}', '${row.monto}')">💬</button>
+                <button class="action-btn" title="Eliminar Registro" onclick="eliminarRegistro('${row.id}', '${conceptoEscapado}', ${row.rowIndex})">🗑️</button>
+            </td>
+        </tr>`;
+    });
+
+    document.getElementById("tablaHistorial").innerHTML = html;
+}
+
+function eliminarRegistro(id, concepto, rowIndex){
+    if(confirm("¿Estás seguro de que deseas eliminar este registro permanentemente?")){
+        const urlDelete = `${API_URL}?action=delete&id=${encodeURIComponent(id || '')}&concepto=${encodeURIComponent(concepto || '')}&rowIndex=${rowIndex || ''}`;
+        
+        fetch(urlDelete)
+        .then(res => res.json())
+        .then(data => {
+            if(data.success){
+                alert("¡Registro eliminado con éxito!");
+                cargarHistorial();
+            } else {
+                alert("❌ " + (data.message || "Error al intentar eliminar"));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Error de conexión al intentar eliminar.");
+        });
+    }
+}
+
+function verRecibo(index){
+    const item = todosLosDatos[index];
+    if(!item) return;
+
+    const fechaLimpia = String(item.fecha || '').split('T')[0];
+    const montoFormateado = formatoMoneda(item.monto);
+
+    document.getElementById("recFecha").innerText = fechaLimpia;
+    document.getElementById("recConcepto").innerText = item.concepto || 'Servicio Técnico';
+    document.getElementById("recCategoria").innerText = "Categoría: " + (item.categoria || 'General');
+    document.getElementById("recMetodo").innerText = item.metodo || 'Efectivo';
+    document.getElementById("recMontoTabla").innerText = montoFormateado;
+    document.getElementById("recMonto").innerText = montoFormateado;
+    
+    const numRandom = String(index + 101).padStart(4, '0');
+    document.getElementById("recNumFactura").innerText = `INV-${numRandom}`;
+
+    document.getElementById("receiptModal").style.display = "flex";
+}
+
+function cerrarModalRecibo(){
+    document.getElementById("receiptModal").style.display = "none";
+}
+
+
+function abrirWA(num, concepto, monto){
+    if(!num || num.trim() === "") { 
+        alert("Este registro no tiene número de WhatsApp guardado."); 
+        return; 
+    }
+    
+    let numLimpio = num.replace(/\D/g, '');
+    if(numLimpio.length === 10) numLimpio = "57" + numLimpio;
+
+    // Mensaje usando códigos Unicode explícitos para garantizar compatibilidad total en WhatsApp Desktop
+    const textoMensaje = 
+        "\u2728 *\u00A1Hola! Te saludamos de Kryszx Tecnolog\u00EDa.*\n\n" +
+        "\uD83C\uDF89 Te informamos que el servicio de tu equipo ha sido *completado con \u00E9xito* y ya puedes pasar a retirarlo.\n\n" +
+        "\uD83D\uDCCD *Servicio realizado:* " + concepto + "\n" +
+        "\uD83D\uDCB0 *Total a pagar:* " + formatoMoneda(monto) + "\n\n" +
+        "\uD83D\uDCCD \u00A1Te esperamos! Si tienes alguna duda previa, quedamos atentos por este medio.";
+
+    const textoURL = encodeURIComponent(textoMensaje);
+    
+    // Usamos la API oficial de WhatsApp para asegurar la correcta lectura de caracteres
+    window.open(`https://api.whatsapp.com/send?phone=${numLimpio}&text=${textoURL}`, '_blank');
+}
+
+
+function formatoMoneda(val){
+    let num = parseFloat(val) || 0;
+    return "$" + num.toLocaleString("es-CO");
+}
+
+function exportarCSV(){
+    if(todosLosDatos.length === 0){ alert("No hay datos para exportar"); return; }
+    
+    let csv = "ID,Tipo,Fecha,Concepto,WhatsApp,Categoria,Metodo,Monto\n";
+    todosLosDatos.forEach(r => {
+        csv += `"${r.id}","${r.tipo}","${r.fecha}","${r.concepto}","${r.whatsapp}","${r.categoria}","${r.metodo}","${r.monto}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", `Reporte_Financiero_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
+
+</body>
+</html>
